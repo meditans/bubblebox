@@ -11,7 +11,7 @@
 
         nodejs = pkgs.nodejs_22;
 
-        npmDepsHash = "sha256-3W2YMBaUe704Y78Zw13o9dC9lwwHri+4OwFwCpq2drA=";
+        npmDepsHash = "sha256-uej0uXVbihmxpuvviCK/5JFSEqDamIW5ETOL/ZKW45g=";
 
         NODE_OPTIONS = "--max-old-space-size=4096";
 
