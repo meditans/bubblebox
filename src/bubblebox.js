@@ -178,7 +178,6 @@ class BubblewrapSandbox extends Sandbox {
 		const {
 			sandboxHome,
 			homeBindMounts,
-			shareTree,
 			repoRoot,
 			allowSshAgent,
 			allowGpgAgent,
@@ -237,9 +236,6 @@ class BubblewrapSandbox extends Sandbox {
 			"--setenv", "TMP", "/tmp",
 		);
 
-		if (shareTree !== repoRoot) {
-			args.push("--ro-bind", shareTree, shareTree);
-		}
 		args.push("--bind", repoRoot, repoRoot);
 
 		const xdgRuntimeDir =
@@ -517,17 +513,6 @@ function main() {
 		homeBindMounts.push({ src, dst });
 	}
 
-	const realRepoRoot = realpath(repoRoot);
-	const realHome = realpath(home);
-	let shareTree;
-	if (realRepoRoot.startsWith(realHome + "/")) {
-		const relPath = realRepoRoot.slice(realHome.length + 1);
-		const topDir = relPath.split("/")[0];
-		shareTree = path.join(realHome, topDir);
-	} else {
-		shareTree = realRepoRoot;
-	}
-
 	const extraMounts = options.extraMounts.map(({ path: p, mode }) => {
 		const abs = path.resolve(projectDir, p);
 		if (!pathExists(abs)) {
@@ -542,7 +527,6 @@ function main() {
 		sandbox = Sandbox.create({
 			sandboxHome,
 			homeBindMounts,
-			shareTree,
 			repoRoot,
 			allowSshAgent: options.allowSshAgent,
 			allowGpgAgent: options.allowGpgAgent,
